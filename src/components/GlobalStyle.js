@@ -2,11 +2,18 @@ import { createGlobalStyle } from 'styled-components';
 import 'modern-normalize/modern-normalize.css';
 
 export const GlobalStyle = createGlobalStyle`
+
+  @font-face {
+	font-family: 'Dancing Script', cursive;
+	src: url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+ }
+
   body {
 		margin: 0;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-			'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-			sans-serif;
+		max-width: 100vw;
+		min-height: 100vh;
+		font-family: 'Dancing Script', cursive;
+		font-size: 14px;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 }
@@ -22,11 +29,14 @@ export const GlobalStyle = createGlobalStyle`
 		clip: rect(0 0 0 0);
 	}
 
+
 	.app {
 		width: 100vw;
+		max-width: 100vw;
 		min-height: 100vh;
-		background-color: #52ACFF;
-		background-image: linear-gradient(180deg, #52ACFF 25%, #FFE32C 100%);
+		background-color: #21D4FD;
+		background-image: linear-gradient(-19deg, #B721FF 0%, #21D4FD 80%);
+
 
 	}
 

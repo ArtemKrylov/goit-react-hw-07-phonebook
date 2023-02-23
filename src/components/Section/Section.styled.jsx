@@ -6,10 +6,11 @@ const SectionStyled = styled(Section)`
   padding-bottom: 15px;
 
   & .section-title {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 
     text-align: center;
     font-weight: 900;
+    font-size: 30px;
   }
 
   ${props => props.theme.media.tablet} {
