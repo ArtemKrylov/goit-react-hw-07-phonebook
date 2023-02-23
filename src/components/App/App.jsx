@@ -8,6 +8,7 @@ import Section from 'components/Section';
 import { GlobalStyle } from '../GlobalStyle';
 import ContactForm from 'components/ContactForm';
 import { Contacts, PhoneBook } from './App.styled';
+import { EmptyContactList } from 'components/ContactList/ContactList.styled';
 
 export default class App extends Component {
   state = {
@@ -53,8 +54,18 @@ export default class App extends Component {
     this.setState({ filter });
   };
 
+  //
+  getFilteredContacts = () => {
+    const { filter, contacts } = this.state;
+    return filter === ''
+      ? contacts
+      : contacts.filter(contact =>
+          contact.name.toLowerCase().includes(filter.toLowerCase())
+        );
+  };
+
   render() {
-    const { contacts, filter } = this.state;
+    const filteredContacts = this.getFilteredContacts();
     return (
       <div className="app">
         <GlobalStyle />
@@ -65,12 +76,18 @@ export default class App extends Component {
             <Contacts className="contacts">
               <h2 className="contacts__subtitle">Contacts</h2>
               <Filter onFilterInput={this.onFilterInput} className="filter" />
-              <ContactList
-                contacts={contacts}
-                filter={filter}
-                deleteContact={this.deleteContact}
-                className="contactList"
-              />
+              {}
+              {filteredContacts.length === 0 ? (
+                <EmptyContactList className="contactList__empty">
+                  No contacts in list
+                </EmptyContactList>
+              ) : (
+                <ContactList
+                  contacts={filteredContacts}
+                  deleteContact={this.deleteContact}
+                  className="contactList"
+                />
+              )}
             </Contacts>
           </PhoneBook>
         </Section>
