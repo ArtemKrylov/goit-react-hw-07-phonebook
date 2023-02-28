@@ -24,6 +24,11 @@ export const Contacts = styled.div`
     margin-bottom: 15px;
     text-align: center;
   }
+
+  ${props => props.theme.media.tablet} {
+    width: 50%;
+    padding: 5px 10px;
+  }
 `;
 
 export const PhoneBook = styled.div`
@@ -33,10 +38,15 @@ export const PhoneBook = styled.div`
   justify-content: center;
   gap: 25px;
 
+  & .contactForm-wrapper {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+  }
   ${props => props.theme.media.tablet} {
     flex-direction: row;
     align-items: flex-start;
-    justify-content: space-around;
+    justify-content: space-between;
     gap: 0;
   }
 `;
@@ -75,8 +85,7 @@ export const Button = styled.button`
 
 export const ButtonDelete = styled(Button)`
   display: inline-block;
-  margin-top: 0;
-  margin-left: auto;
+  margin: 0;
   padding: 3px;
 `;
 

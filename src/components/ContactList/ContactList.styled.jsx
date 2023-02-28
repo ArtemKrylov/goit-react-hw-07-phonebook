@@ -10,4 +10,5 @@ export const EmptyContactList = styled.div`
   color: ${({ theme }) => theme.colors.accent};
   font-size: 25px;
   text-shadow: ${({ theme }) => theme.shadows.fontBlack};
+  text-align: center;
 `;

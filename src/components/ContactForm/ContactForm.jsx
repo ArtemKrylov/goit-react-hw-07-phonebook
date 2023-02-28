@@ -18,10 +18,18 @@ export default class ContactForm extends Component {
     this.setState({ [name]: value });
   };
 
+  prettifyName(name) {
+    return name
+      .split(' ')
+      .map(el => el[0].toUpperCase() + el.slice(1))
+      .join(' ');
+  }
+
   handleFormSubmit = evt => {
     const { name, number } = this.state;
     evt.preventDefault();
-    this.props.onSubmit({ name, number });
+    const namePrettified = this.prettifyName(name);
+    this.props.onSubmit({ name: namePrettified, number });
     this.reset();
   };
 
@@ -49,6 +57,7 @@ export default class ContactForm extends Component {
             required
             onChange={this.handleInputChange}
             placeholder="Enter your name"
+            autoFocus
           />
         </label>
         <label>

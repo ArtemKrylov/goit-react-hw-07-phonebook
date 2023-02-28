@@ -12,9 +12,15 @@ import { EmptyContactList } from 'components/ContactList/ContactList.styled';
 
 export default class App extends Component {
   state = {
-    contacts: [], // [{id:str, name:str, number:str},]
+    contacts: JSON.parse(localStorage.getItem('contacts')) ?? [], // [{id:str, name:str, number:str},]
     filter: '',
   };
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts.length !== prevState.contacts.length) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   //generate unique id string using nanoid library
   generateId = () => nanoid();
@@ -39,11 +45,12 @@ export default class App extends Component {
         contacts: [contact, ...prevState.contacts],
       };
     });
+    // console.log('state in addContact', this.state);
   };
 
   //deletes new contact to contactlist (changes state)
   deleteContact = id => {
-    console.log('deleting', id);
+    // console.log('deleting', id);
     this.setState(({ contacts }) => ({
       contacts: contacts.filter(contact => contact.id !== id),
     }));
@@ -72,7 +79,10 @@ export default class App extends Component {
 
         <Section title="Phonebook">
           <PhoneBook>
-            <ContactForm className="contactForm" onSubmit={this.addContact} />
+            <div className="contactForm-wrapper">
+              <ContactForm className="contactForm" onSubmit={this.addContact} />
+            </div>
+
             <Contacts className="contacts">
               <h2 className="contacts__subtitle">Contacts</h2>
               <Filter onFilterInput={this.onFilterInput} className="filter" />
