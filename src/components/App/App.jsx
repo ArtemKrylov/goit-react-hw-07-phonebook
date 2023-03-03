@@ -12,9 +12,15 @@ import { EmptyContactList } from 'components/ContactList/ContactList.styled';
 
 export default class App extends Component {
   state = {
-    contacts: JSON.parse(localStorage.getItem('contacts')) ?? [], // [{id:str, name:str, number:str},]
+    contacts: [], // [{id:str, name:str, number:str},]
     filter: '',
   };
+
+  componentDidMount() {
+    this.setState({
+      contacts: JSON.parse(localStorage.getItem('contacts')) ?? [],
+    });
+  }
 
   componentDidUpdate(_, prevState) {
     if (this.state.contacts.length !== prevState.contacts.length) {
@@ -45,12 +51,10 @@ export default class App extends Component {
         contacts: [contact, ...prevState.contacts],
       };
     });
-    // console.log('state in addContact', this.state);
   };
 
   //deletes new contact to contactlist (changes state)
   deleteContact = id => {
-    // console.log('deleting', id);
     this.setState(({ contacts }) => ({
       contacts: contacts.filter(contact => contact.id !== id),
     }));
