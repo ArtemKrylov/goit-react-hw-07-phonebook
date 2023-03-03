@@ -1,7 +1,13 @@
 import { ButtonDelete } from 'components/App/App.styled';
 import PropTypes from 'prop-types';
 
-const ContactItem = ({ id, name, number, className, deleteContact }) => {
+export default function ContactItem({
+  id,
+  name,
+  number,
+  className,
+  deleteContact,
+}) {
   const handleClick = evt => {
     deleteContact(evt.target.value);
   };
@@ -19,7 +25,7 @@ const ContactItem = ({ id, name, number, className, deleteContact }) => {
       </ButtonDelete>
     </li>
   );
-};
+}
 
 ContactItem.propTypes = {
   id: PropTypes.string.isRequired,
@@ -28,5 +34,3 @@ ContactItem.propTypes = {
   deleteContact: PropTypes.func.isRequired,
   className: PropTypes.string,
 };
-
-export default ContactItem;

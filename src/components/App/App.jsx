@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix';
 
@@ -10,64 +10,50 @@ import ContactForm from 'components/ContactForm';
 import { Contacts, PhoneBook } from './App.styled';
 import { EmptyContactList } from 'components/ContactList/ContactList.styled';
 
-export default class App extends Component {
-  state = {
-    contacts: [], // [{id:str, name:str, number:str},]
-    filter: '',
-  };
+export default function App() {
+  const [contacts, setContacts] = useState(
+    JSON.parse(localStorage.getItem('contacts')) ?? [] //get initial contacts value from localStorage if any
+  ); // contacts: [{id:str, name:str, number:str},]
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    this.setState({
-      contacts: JSON.parse(localStorage.getItem('contacts')) ?? [],
-    });
-  }
-
-  componentDidUpdate(_, prevState) {
-    if (this.state.contacts.length !== prevState.contacts.length) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
+  //while updating contacts put them to localStorage
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   //generate unique id string using nanoid library
-  generateId = () => nanoid();
+  const generateId = () => nanoid();
 
   //check if contact being added is already in contactlist
-  checkContact = newContact => {
-    return !this.state.contacts.some(
+  const checkContact = newContact => {
+    return !contacts.some(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
   };
 
   //adds new contact to contactlist (changes state)
-  addContact = contact => {
+  const addContact = contact => {
     //if contact name exists
-    if (!this.checkContact(contact)) {
+    if (!checkContact(contact)) {
       Notify.failure(`${contact.name} is already in contacts!`);
       return;
     }
-    contact.id = this.generateId();
-    this.setState(prevState => {
-      return {
-        contacts: [contact, ...prevState.contacts],
-      };
-    });
+    contact.id = generateId();
+    setContacts([contact, ...contacts]);
   };
 
   //deletes new contact to contactlist (changes state)
-  deleteContact = id => {
-    this.setState(({ contacts }) => ({
-      contacts: contacts.filter(contact => contact.id !== id),
-    }));
+  const deleteContact = id => {
+    setContacts(contacts.filter(contact => contact.id !== id));
   };
 
   //adds filter string (changes state)
-  onFilterInput = filter => {
-    this.setState({ filter });
+  const onFilterInput = newFilter => {
+    setFilter(newFilter);
   };
 
-  //
-  getFilteredContacts = () => {
-    const { filter, contacts } = this.state;
+  //filter contacts by filter value
+  const getFilteredContacts = () => {
     return filter === ''
       ? contacts
       : contacts.filter(contact =>
@@ -75,37 +61,36 @@ export default class App extends Component {
         );
   };
 
-  render() {
-    const filteredContacts = this.getFilteredContacts();
-    return (
-      <div className="app">
-        <GlobalStyle />
+  const filteredContacts = getFilteredContacts();
 
-        <Section title="Phonebook">
-          <PhoneBook>
-            <div className="contactForm-wrapper">
-              <ContactForm className="contactForm" onSubmit={this.addContact} />
-            </div>
+  return (
+    <div className="app">
+      <GlobalStyle />
 
-            <Contacts className="contacts">
-              <h2 className="contacts__subtitle">Contacts</h2>
-              <Filter onFilterInput={this.onFilterInput} className="filter" />
-              {}
-              {filteredContacts.length === 0 ? (
-                <EmptyContactList className="contactList__empty">
-                  No contacts in list
-                </EmptyContactList>
-              ) : (
-                <ContactList
-                  contacts={filteredContacts}
-                  deleteContact={this.deleteContact}
-                  className="contactList"
-                />
-              )}
-            </Contacts>
-          </PhoneBook>
-        </Section>
-      </div>
-    );
-  }
+      <Section title="Phonebook">
+        <PhoneBook>
+          <div className="contactForm-wrapper">
+            <ContactForm className="contactForm" onSubmit={addContact} />
+          </div>
+
+          <Contacts className="contacts">
+            <h2 className="contacts__subtitle">Contacts</h2>
+            <Filter onFilterInput={onFilterInput} className="filter" />
+            {}
+            {filteredContacts.length === 0 ? (
+              <EmptyContactList className="contactList__empty">
+                No contacts in list
+              </EmptyContactList>
+            ) : (
+              <ContactList
+                contacts={filteredContacts}
+                deleteContact={deleteContact}
+                className="contactList"
+              />
+            )}
+          </Contacts>
+        </PhoneBook>
+      </Section>
+    </div>
+  );
 }
