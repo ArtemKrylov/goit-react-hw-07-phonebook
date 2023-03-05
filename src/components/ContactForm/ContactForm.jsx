@@ -3,15 +3,11 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 export default function ContactForm({ className, onSubmit }) {
-  // state = {
-  //   name: '',
-  //   number: '',
-  // };
   const [contact, setContact] = useState({ name: '', number: '' });
   const { name, number } = contact;
 
   const handleInputChange = ({ target: { name, value } }) => {
-    setContact({ ...contact, [name]: value });
+    setContact(prev => ({ ...prev, [name]: value }));
   };
 
   const prettifyName = name => {

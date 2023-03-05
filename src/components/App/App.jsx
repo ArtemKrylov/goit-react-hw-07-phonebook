@@ -39,7 +39,7 @@ export default function App() {
       return;
     }
     contact.id = generateId();
-    setContacts([contact, ...contacts]);
+    setContacts(prev => [contact, ...prev]);
   };
 
   //deletes new contact to contactlist (changes state)
