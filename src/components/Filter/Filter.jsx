@@ -1,9 +1,12 @@
 import { Input } from 'components/App/App.styled';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+import { setFilter } from 'redux/slices/filterSlice';
 
 export default function Filter({ onFilterInput, className }) {
+  const dispatch = useDispatch();
   const handleFilterChange = ({ target: { value } }) => {
-    onFilterInput(value);
+    dispatch(setFilter(value));
   };
 
   return (
@@ -18,6 +21,5 @@ export default function Filter({ onFilterInput, className }) {
 }
 
 Filter.propTypes = {
-  onFilterInput: PropTypes.func.isRequired,
   className: PropTypes.string,
 };

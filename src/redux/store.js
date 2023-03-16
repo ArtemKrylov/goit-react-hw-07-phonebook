@@ -17,7 +17,7 @@ import { filterReducer } from './slices/filterSlice';
 const contactsReducerConfig = {
   key: 'contacts',
   storage,
-  whitelist: ['contacts'],
+  whitelist: ['data'],
 };
 
 export const store = configureStore({
