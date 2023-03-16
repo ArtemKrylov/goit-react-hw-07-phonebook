@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix';
 
@@ -9,15 +9,22 @@ import { GlobalStyle } from '../GlobalStyle';
 import ContactForm from 'components/ContactForm';
 import { Contacts, PhoneBook } from './App.styled';
 import { EmptyContactList } from 'components/ContactList/ContactList.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts, getFilter } from 'redux/selectors';
+import { setFilter } from 'redux/slices/filterSlice';
+import { addContact, deleteContact } from 'redux/slices/contactsSlice';
 
 export default function App() {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem('contacts')) ?? [] //get initial contacts value from localStorage if any
-  ); // contacts: [{id:str, name:str, number:str},]
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+
+  //getting state from redux store
+  const filter = useSelector(getFilter);
+  const contacts = useSelector(getContacts);
 
   //while updating contacts put them to localStorage
   useEffect(() => {
+    console.log('contacts: ', contacts);
+    if (contacts.length === 0) return;
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
@@ -27,29 +34,29 @@ export default function App() {
   //check if contact being added is already in contactlist
   const checkContact = newContact => {
     return !contacts.some(
-      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+      contact => contact?.name.toLowerCase() === newContact?.name.toLowerCase()
     );
   };
 
   //adds new contact to contactlist (changes state)
-  const addContact = contact => {
+  const handleContactFormSubmit = contact => {
     //if contact name exists
     if (!checkContact(contact)) {
       Notify.failure(`${contact.name} is already in contacts!`);
       return;
     }
     contact.id = generateId();
-    setContacts(prev => [contact, ...prev]);
+    dispatch(addContact(contact));
   };
 
   //deletes new contact to contactlist (changes state)
-  const deleteContact = id => {
-    setContacts(contacts.filter(contact => contact.id !== id));
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
   };
 
   //adds filter string (changes state)
   const onFilterInput = newFilter => {
-    setFilter(newFilter);
+    dispatch(setFilter(newFilter));
   };
 
   //filter contacts by filter value
@@ -70,7 +77,10 @@ export default function App() {
       <Section title="Phonebook">
         <PhoneBook>
           <div className="contactForm-wrapper">
-            <ContactForm className="contactForm" onSubmit={addContact} />
+            <ContactForm
+              className="contactForm"
+              onSubmit={handleContactFormSubmit}
+            />
           </div>
 
           <Contacts className="contacts">
@@ -84,7 +94,7 @@ export default function App() {
             ) : (
               <ContactList
                 contacts={filteredContacts}
-                deleteContact={deleteContact}
+                deleteContact={handleDeleteContact}
                 className="contactList"
               />
             )}
