@@ -5,10 +5,18 @@ import { GlobalStyle } from '../GlobalStyle';
 import ContactForm from 'components/ContactForm';
 import { Contacts, PhoneBook } from './App.styled';
 import { EmptyContactList } from 'components/ContactList/ContactList.styled';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getFilteredContacts } from 'redux/selectors';
+import { useEffect } from 'react';
+import { fetchContacts } from 'redux/operations';
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   const filteredContacts = useSelector(getFilteredContacts);
 
   return (

@@ -4,8 +4,8 @@ import { Notify } from 'notiflix';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/operations';
 import { getContacts } from 'redux/selectors';
-import { addContact } from 'redux/slices/contactsSlice';
 
 export default function ContactForm({ className }) {
   const dispatch = useDispatch();

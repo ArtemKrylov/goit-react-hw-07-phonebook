@@ -1,7 +1,7 @@
 import { ButtonDelete } from 'components/App/App.styled';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { deleteContact } from 'redux/slices/contactsSlice';
+import { deleteContact } from 'redux/operations';
 
 export default function ContactItem({ id, name, number, className }) {
   const dispatch = useDispatch();
